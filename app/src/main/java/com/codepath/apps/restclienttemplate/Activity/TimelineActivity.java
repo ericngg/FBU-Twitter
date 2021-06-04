@@ -12,12 +12,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.codepath.apps.restclienttemplate.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.adapters.TweetsAdapter;
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
+import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
 import com.codepath.apps.restclienttemplate.models.ComposeActivity;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -36,38 +38,38 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
     public static final String TAG = "TimelineActivity";
     public static final int REQUEST_CODE = 20;
 
-    Long lowestMaxId;
+    private Long lowestMaxId;
 
     TwitterClient client;
-    RecyclerView rvTweets;
     List<Tweet> tweets;
     TweetsAdapter adapter;
-    SwipeRefreshLayout srlContainer;
 
     MenuItem miActionProgressItem;
+
+    private ActivityTimelineBinding binding;
 
     private EndlessRecyclerViewScrollListener scrollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_timeline);
+        binding = ActivityTimelineBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar_icon);
 
         client = TwitterApp.getRestClient(this);
-        rvTweets = findViewById(R.id.rvTweets);
-        srlContainer = findViewById(R.id.srlContainer);
 
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        rvTweets.setLayoutManager(linearLayoutManager);
-        rvTweets.setAdapter(adapter);
+        binding.rvTweets.setLayoutManager(linearLayoutManager);
+        binding.rvTweets.setAdapter(adapter);
         populateHomeTimeline();
 
-        srlContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        binding.srlContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 showProgressBar();
@@ -76,7 +78,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         });
 
         // Configure the refreshing colors
-        srlContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+        binding.srlContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
@@ -88,7 +90,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
             }
         };
 
-        rvTweets.addOnScrollListener(scrollListener);
+        binding.rvTweets.addOnScrollListener(scrollListener);
     }
 
     // Append the next page of data into the adapter
@@ -135,19 +137,19 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
                 try {
                     tweets.addAll(Tweet.fromJsonArray(jsonArray));
                     adapter.notifyDataSetChanged();
-                    rvTweets.scrollToPosition(0);
+                    binding.rvTweets.scrollToPosition(0);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
                 hideProgressBar();
-                srlContainer.setRefreshing(false);
+                binding.srlContainer.setRefreshing(false);
             }
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.d(TAG, "Fetch timeline Error: " + throwable.toString());
-                srlContainer.setRefreshing(false);
+                binding.srlContainer.setRefreshing(false);
                 hideProgressBar();
             }
         });
@@ -199,7 +201,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
             tweets.add(0, tweet);
             // Update the adapter
             adapter.notifyItemInserted(0);
-            rvTweets.smoothScrollToPosition(0);
+            binding.rvTweets.smoothScrollToPosition(0);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

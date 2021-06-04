@@ -8,12 +8,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.codepath.apps.restclienttemplate.adapters.FollowersAdapter;
 import com.codepath.apps.restclienttemplate.adapters.FollowsAdapter;
+import com.codepath.apps.restclienttemplate.databinding.ActivityFfBinding;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -33,19 +35,19 @@ public class ffActivity extends AppCompatActivity {
     private long id;
 
     List<String> followers;
+    List<String> follows;
     FollowersAdapter adapter1;
     FollowsAdapter adapter2;
-    RecyclerView rvFollowers;
-    RecyclerView rvFollows;
 
-    List<String> follows;
-
-
+    private ActivityFfBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ff);
+        binding = binding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar_icon);
@@ -55,8 +57,6 @@ public class ffActivity extends AppCompatActivity {
         follows = new ArrayList<>();
         id = intent.getLongExtra("id", 1);
         client = TwitterApp.getRestClient(this);
-        rvFollowers = findViewById(R.id.rvFollowers);
-        rvFollows = findViewById(R.id.rvFollows);
 
         follower();
         follows();
@@ -75,8 +75,8 @@ public class ffActivity extends AppCompatActivity {
                     }
 
                     adapter1 = new FollowersAdapter(followers);
-                    rvFollowers.setAdapter(adapter1);
-                    rvFollowers.setLayoutManager(new LinearLayoutManager(ffActivity.this));
+                    binding.rvFollowers.setAdapter(adapter1);
+                    binding.rvFollowers.setLayoutManager(new LinearLayoutManager(ffActivity.this));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -104,8 +104,8 @@ public class ffActivity extends AppCompatActivity {
                     Log.i(TAG, "onSuccess: " + follows.toString());
 
                     adapter2 = new FollowsAdapter(follows);
-                    rvFollows.setAdapter(adapter2);
-                    rvFollows.setLayoutManager(new LinearLayoutManager(ffActivity.this));
+                    binding.rvFollows.setAdapter(adapter2);
+                    binding.rvFollows.setLayoutManager(new LinearLayoutManager(ffActivity.this));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

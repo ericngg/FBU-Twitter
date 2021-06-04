@@ -19,6 +19,7 @@ import com.codepath.apps.restclienttemplate.ComposeDialogFragment;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
+import com.codepath.apps.restclienttemplate.databinding.ActivityTweetDetailBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -33,7 +34,6 @@ import okhttp3.Headers;
 public class TweetDetailActivity extends AppCompatActivity {
 
     public static final String TAG = "TweetDetailActivity";
-    public static final int REQUEST_CODE = 25;
 
     TwitterClient client;
 
@@ -50,11 +50,15 @@ public class TweetDetailActivity extends AppCompatActivity {
     ImageButton ibReply;
     ImageButton ibPerson;
 
+    private ActivityTweetDetailBinding binding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tweet_detail);
+        binding = ActivityTweetDetailBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar_icon);
