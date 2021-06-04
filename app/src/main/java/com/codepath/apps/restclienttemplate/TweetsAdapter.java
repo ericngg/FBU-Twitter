@@ -21,13 +21,17 @@ import java.util.Locale;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
 
-    Context context;
+    static Context context;
     List<Tweet> tweets;
+    ViewHolder.onTweetListener onTweetListener;
+
 
     // Pass in the context and list of tweets
-    public TweetsAdapter(Context context, List<Tweet> tweets) {
+    public TweetsAdapter(Context context, List<Tweet> tweets, ViewHolder.onTweetListener onTweetListener) {
         this.context = context;
         this.tweets = tweets;
+        this.onTweetListener = onTweetListener;
+
     }
 
     // For each row, inflate the layout
@@ -35,7 +39,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_tweet, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, onTweetListener);
     }
 
 
@@ -63,7 +67,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView ivProfileImage;
         TextView tvBody;
@@ -71,13 +75,18 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvCreatedAt;
         ImageView ivMediaImage;
 
-        public ViewHolder(@NonNull View itemView) {
+        onTweetListener onTweetListener;
+
+        public ViewHolder(@NonNull View itemView, onTweetListener onTweetListener) {
             super(itemView);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
             ivMediaImage = itemView.findViewById(R.id.ivMediaImage);
+            this.onTweetListener = onTweetListener;
+
+            itemView.setOnClickListener(this);
         }
 
         public void bind(Tweet tweet) {
@@ -110,6 +119,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             }
 
             return relativeDate;
+        }
+
+        @Override
+        public void onClick(View view) {
+            onTweetListener.onTweetClick(getBindingAdapterPosition());
+        }
+
+        public interface onTweetListener {
+            void onTweetClick(int position);
         }
     }
 }

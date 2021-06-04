@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,7 +29,7 @@ import java.util.List;
 
 import okhttp3.Headers;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity implements TweetsAdapter.ViewHolder.onTweetListener {
 
     public static final String TAG = "TimelineActivity";
     public static final int REQUEST_CODE = 20;
@@ -46,12 +47,15 @@ public class TimelineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.action_bar_icon);
+
         client = TwitterApp.getRestClient(this);
         rvTweets = findViewById(R.id.rvTweets);
         srlContainer = findViewById(R.id.srlContainer);
 
         tweets = new ArrayList<>();
-        adapter = new TweetsAdapter(this, tweets);
+        adapter = new TweetsAdapter(this, tweets, this);
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
         populateHomeTimeline();
@@ -128,6 +132,7 @@ public class TimelineActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.compose) {
             Intent intent = new Intent(this, ComposeActivity.class);
+            intent.putExtra("code", 20);
             startActivityForResult(intent, REQUEST_CODE);
             return true;
         }
@@ -167,5 +172,14 @@ public class TimelineActivity extends AppCompatActivity {
                 Log.e(TAG, "onFailure! Status code: " + statusCode, throwable);
             }
         });
+    }
+
+    @Override
+    public void onTweetClick(int position) {
+        Tweet tweet = tweets.get(position);
+
+        Intent intent = new Intent(TimelineActivity.this, TweetDetailActivity.class);
+        intent.putExtra("tweet", Parcels.wrap(tweet));
+        startActivity(intent);
     }
 }

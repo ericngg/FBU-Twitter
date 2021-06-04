@@ -14,6 +14,8 @@ public class Tweet {
     public String createdAt;
     public User user;
     public String mediaUrl;
+    public boolean liked;
+    public long uid;
 
     public Tweet() {}
 
@@ -22,6 +24,8 @@ public class Tweet {
         tweet.body = jsonObject.getString("text");
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
+        tweet.liked = jsonObject.getBoolean("favorited");
+        tweet.uid = jsonObject.getLong("id");
 
         JSONObject entities = jsonObject.getJSONObject("entities");
 

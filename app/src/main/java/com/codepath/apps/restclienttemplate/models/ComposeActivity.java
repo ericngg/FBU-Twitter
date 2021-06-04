@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate.models;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -39,6 +40,9 @@ public class ComposeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
 
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.action_bar_icon);
+
         client = TwitterApp.getRestClient(this);
 
         etCompose = findViewById(R.id.etCompose);
@@ -46,6 +50,12 @@ public class ComposeActivity extends AppCompatActivity {
         tilCount = findViewById(R.id.tilCount);
 
         tilCount.setCounterMaxLength(MAX_TWEET_LENGTH);
+
+        Intent intent = getIntent();
+
+        if (intent.getIntExtra("code", 1) == 25) {
+            etCompose.setText("@" + intent.getStringExtra("name") + " ");
+        }
 
         // Set click listener to button
         btnTweet.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +85,8 @@ public class ComposeActivity extends AppCompatActivity {
                             intent.putExtra("tweet", Parcels.wrap(tweet));
 
                             setResult(RESULT_OK, intent);
+
+                            Toast.makeText(ComposeActivity.this, "Retweet sent!", Toast.LENGTH_LONG).show();
                             finish();
                         } catch (JSONException e) {
                             e.printStackTrace();

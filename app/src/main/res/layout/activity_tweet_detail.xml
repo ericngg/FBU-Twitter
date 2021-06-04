@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TweetDetailActivity">
+
+    <ImageView
+        android:id="@+id/ivDetailMediaImage"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/ivDetailProfileImage"
+        android:layout_width="wrap_content"
+        android:layout_height="125dp"
+        android:layout_below="@+id/ivDetailMediaImage"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivDetailMediaImage"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tvDetailScreenName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivDetailMediaImage"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@+id/ivDetailProfileImage"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        tools:text="ERIC NG" />
+
+    <TextView
+        android:id="@+id/tvDetailCreatedAt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvDetailScreenName"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@+id/ivDetailProfileImage"
+        android:textSize="20sp"
+        tools:text="5h" />
+
+    <TextView
+        android:id="@+id/tvDetailBody"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivDetailProfileImage"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:textStyle="normal"
+        tools:text="THIS IS WHATS HAPPENING!" />
+
+    <ImageButton
+        android:id="@+id/ibFavorite"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/tvDetailBody"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:tag="emptylike"
+        app:srcCompat="@mipmap/empty_heart_foreground" />
+
+    <ImageButton
+        android:id="@+id/ibRetweet"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/tvDetailBody"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:layout_toEndOf="@+id/ibFavorite"
+        app:srcCompat="@mipmap/retweet2_foreground" />
+
+    <ImageButton
+        android:id="@+id/ibReply"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/tvDetailBody"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:layout_toEndOf="@+id/ibRetweet"
+        app:srcCompat="@mipmap/reply_foreground" />
+
+    <ImageButton
+        android:id="@+id/ibPerson"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/tvDetailBody"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:layout_toEndOf="@+id/ibReply"
+        app:srcCompat="@mipmap/person_foreground" />
+
+</RelativeLayout>
