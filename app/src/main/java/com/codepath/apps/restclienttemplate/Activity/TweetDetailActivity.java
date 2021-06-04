@@ -1,8 +1,8 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.Activity;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,9 +12,13 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.codepath.apps.restclienttemplate.models.ComposeActivity;
+import com.codepath.apps.restclienttemplate.ComposeDialogFragment;
+import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.TwitterApp;
+import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -39,9 +43,12 @@ public class TweetDetailActivity extends AppCompatActivity {
     TextView tvDetailScreenName;
     TextView tvDetailCreatedAt;
 
+    Tweet tweet;
+
     ImageButton ibFavorite;
     ImageButton ibRetweet;
     ImageButton ibReply;
+    ImageButton ibPerson;
 
 
     @Override
@@ -62,9 +69,10 @@ public class TweetDetailActivity extends AppCompatActivity {
         ibFavorite = findViewById(R.id.ibFavorite);
         ibReply = findViewById(R.id.ibReply);
         ibRetweet = findViewById(R.id.ibRetweet);
+        ibPerson = findViewById(R.id.ibPerson);
 
         Intent intent = getIntent();
-        final Tweet tweet = Parcels.unwrap(intent.getParcelableExtra("tweet"));
+        tweet = Parcels.unwrap(intent.getParcelableExtra("tweet"));
 
         if (!tweet.mediaUrl.equals("")) {
             Glide.with(this).load(tweet.mediaUrl).into(ivDetailMediaImage);
@@ -124,18 +132,31 @@ public class TweetDetailActivity extends AppCompatActivity {
         ibReply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /*
                 Intent intentReply = new Intent(TweetDetailActivity.this, ComposeActivity.class);
                 intentReply.putExtra("name", tweet.user.screenName);
                 intentReply.putExtra("code", 25);
                 startActivity(intentReply);
                 finish();
+                 */
+
+                showComposeDialog();
             }
         });
 
         ibRetweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(TweetDetailActivity.this, "Retweet Success!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
+        ibPerson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentFF = new Intent(TweetDetailActivity.this, ffActivity.class);
+                intentFF.putExtra("id", tweet.user.id);
+                startActivity(intentFF);
             }
         });
     }
@@ -156,5 +177,11 @@ public class TweetDetailActivity extends AppCompatActivity {
         }
 
         return relativeDate;
+    }
+
+    public void showComposeDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        ComposeDialogFragment composeDialogFragment = ComposeDialogFragment.newInstance("Retweet Compose", tweet.user.screenName);
+        composeDialogFragment.show(fm, "fragment_compose");
     }
 }
