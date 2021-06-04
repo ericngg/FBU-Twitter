@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Activity.ffActivity"></activity>
         <activity android:name=".Activity.TweetDetailActivity" />
-        <activity android:name=".models.ComposeActivity" />
+        <activity android:name=".Activity.ComposeActivity" />
         <activity android:name=".Activity.TimelineActivity" />
         <activity
             android:name=".Activity.LoginActivity"

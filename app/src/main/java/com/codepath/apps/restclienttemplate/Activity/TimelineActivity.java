@@ -1,8 +1,8 @@
 package com.codepath.apps.restclienttemplate.Activity;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -20,7 +20,6 @@ import com.codepath.apps.restclienttemplate.adapters.TweetsAdapter;
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
-import com.codepath.apps.restclienttemplate.models.ComposeActivity;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -57,11 +56,26 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         View view = binding.getRoot();
         setContentView(view);
 
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.action_bar_icon);
+        getSupportActionBar().hide();
+        binding.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.compose) {
+                    Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE);
+                    return true;
+                }
+
+                return false;
+            }
+        });
 
         client = TwitterApp.getRestClient(this);
 
+        init();
+    }
+
+    public void init() {
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -132,16 +146,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 adapter.clear();
-                JSONArray jsonArray = json.jsonArray;
-
-                try {
-                    tweets.addAll(Tweet.fromJsonArray(jsonArray));
-                    adapter.notifyDataSetChanged();
-                    binding.rvTweets.scrollToPosition(0);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+                init();
                 hideProgressBar();
                 binding.srlContainer.setRefreshing(false);
             }
@@ -178,7 +183,6 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         // Hide progress item
         miActionProgressItem.setVisible(false);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

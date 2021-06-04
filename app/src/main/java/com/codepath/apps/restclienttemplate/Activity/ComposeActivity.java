@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate.models;
+package com.codepath.apps.restclienttemplate.Activity;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,13 +14,12 @@ import android.widget.Toast;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
+import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
-import org.parceler.Parcel;
 import org.parceler.Parcels;
-import org.w3c.dom.Text;
 
 import okhttp3.Headers;
 
@@ -50,12 +49,6 @@ public class ComposeActivity extends AppCompatActivity {
         tilCount = findViewById(R.id.tilCount);
 
         tilCount.setCounterMaxLength(MAX_TWEET_LENGTH);
-
-        Intent intent = getIntent();
-
-        if (intent.getIntExtra("code", 1) == 25) {
-            etCompose.setText("@" + intent.getStringExtra("name") + " ");
-        }
 
         // Set click listener to button
         btnTweet.setOnClickListener(new View.OnClickListener() {
