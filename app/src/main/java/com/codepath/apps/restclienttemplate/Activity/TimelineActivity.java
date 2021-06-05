@@ -126,6 +126,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
 
                 try {
                     tweets.addAll(Tweet.fromJsonArray(jsonArray));
+                    lowestMaxId = tweets.get(tweets.size() - 1).uid;
                     adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
